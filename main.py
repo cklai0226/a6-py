@@ -1,5 +1,6 @@
 import time
-from threading import Thread
+from A6.command import SMSNewShortMessage
+from A6.communication import A6Communication
 import serial
 
 # self.serialport.write('ath\r');
@@ -55,21 +56,6 @@ serialcom.open()
 
 serialcom.reset_input_buffer()
 serialcom.reset_output_buffer()
-
-class A6Communication(Thread, Observable):
-    """Threaded A6 communication """
-    def __init__(self, comm):
-        super(A6Communication, self).__init__()
-        Observable.__init__(self)
-
-        self.comm = comm
-
-    def run(self):
-        while True:
-            mes = self.comm.readline()
-
-            self.setChanged()
-            self.notify(mes)
 
 t = A6Communication(serialcom)
 t.register(SMSNewShortMessage())
